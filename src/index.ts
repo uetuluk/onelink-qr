@@ -8,6 +8,8 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import UAParser from "ua-parser-js";
+
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
@@ -28,6 +30,48 @@ export default {
 		env: Env,
 		ctx: ExecutionContext
 	): Promise<Response> {
-		return new Response("Hello World!");
+		var userAgent = request.headers.get('user-agent') || "";
+
+		var parser = new UAParser(userAgent);
+
+		var device = parser.getDevice()?.vendor || "";
+		var deviceModel = parser.getDevice()?.model || "";
+
+		var storeMode = "desktop";
+
+		var destinationURL = 'https://minicourse.shanghai.nyu.edu/register';
+    	
+		// Redirect according to storemode
+
+		console.log(device);
+
+		if (device != "") {
+			storeMode = "Tencent";
+			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
+		}
+
+		if (device == "Xiaomi") {
+			storeMode = "Xiaomi";
+			destinationURL = 'https://app.mi.com/details?id=minicourse.shanghai.nyu.edu';
+		}
+
+		if (device == "OPPO") {
+			storeMode = "OPPO";
+			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
+		}
+
+		if (device == "Vivo") {
+			storeMode = "Vivo";
+			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
+		}
+
+		if (device == "Apple") {
+			storeMode = "Apple";
+			destinationURL = 'https://apps.apple.com/cn/app/%E4%B8%8A%E7%BA%BD%E8%AF%BE/id1587644337';
+		}
+		
+		const statusCode = 301;
+
+    	return Response.redirect(destinationURL, statusCode);
 	},
 };
