@@ -36,41 +36,54 @@ export default {
 
 		var device = parser.getDevice()?.vendor || "";
 		var deviceModel = parser.getDevice()?.model || "";
+		var deviceType = parser.getDevice()?.type || "";
+
+		console.log(device);
+		console.log(deviceModel);
+		console.log(deviceType);
 
 		var storeMode = "desktop";
 
 		var destinationURL = 'https://minicourse.shanghai.nyu.edu/register';
-    	
-		// Redirect according to storemode
 
-		console.log(device);
-
-		if (device != "") {
+		if (device != "" || deviceType != "") {
 			storeMode = "Tencent";
 			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
 		}
 
-		if (device == "Xiaomi") {
+		if (device.toUpperCase() == "XIAOMI" || deviceModel.toUpperCase().includes("XIAOMI")) {
 			storeMode = "Xiaomi";
 			destinationURL = 'https://app.mi.com/details?id=minicourse.shanghai.nyu.edu';
 		}
 
-		if (device == "OPPO") {
+		if (device.toUpperCase() == "HUAWEI" || deviceModel.toUpperCase().includes("HUAWEI")) {
+			storeMode = "Huawei";
+			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
+		}
+
+		if (device.toUpperCase() == "OPPO" || deviceModel.toUpperCase().includes("OPPO")) {
 			storeMode = "OPPO";
 			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
 		}
 
-		if (device == "Vivo") {
+		if (device.toUpperCase() == "VIVO" || deviceModel.toUpperCase().includes("VIVO")) {
 			storeMode = "Vivo";
 			destinationURL = 'https://sj.qq.com/appdetail/minicourse.shanghai.nyu.edu';
 		}
 
-		if (device == "Apple") {
+		if (device.toUpperCase() == "APPLE" || deviceModel.toUpperCase().includes("APPLE")) {
 			storeMode = "Apple";
 			destinationURL = 'https://apps.apple.com/cn/app/%E4%B8%8A%E7%BA%BD%E8%AF%BE/id1587644337';
 		}
+
+		if (deviceType == "") {
+			storeMode = "desktop";
+			destinationURL = 'https://minicourse.shanghai.nyu.edu/register';
+		}
 		
 		const statusCode = 301;
+
+		// return new Response(storeMode + " | " + destinationURL)
 
     	return Response.redirect(destinationURL, statusCode);
 	},
